@@ -1,0 +1,19 @@
+{
+  "name": "ocs-sdk",
+  "version": "1.0.0",
+  "description": "SDK for OCS API",
+  "type": "module",
+  "main": "index.mjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@apollo/client": "^3.7.2",
+    "cross-fetch": "^3.1.5",
+    "graphql": "^16.6.0",
+    "graphql-tag": "^2.12.6",
+    "lodash-es": "^4.17.21"
+  }
+}
