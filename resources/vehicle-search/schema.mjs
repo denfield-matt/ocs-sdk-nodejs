@@ -1,0 +1,61 @@
+export const SCHEMA = `
+    id
+    external_driver
+    external_id
+    class
+    make
+    model
+    range
+    derivative
+    vrm
+    vin
+    bodyType
+    fuelType
+    regDate
+    doors
+    seats
+    mileage
+    colour
+    transmission
+    engineSize
+    enginePower
+    powerTrain
+    emissions
+    acceleration {
+        mph
+        khp
+        zeroTo60Mph
+        zeroTo100Kph
+        maxSpeedMph
+        maxSpeedKph
+    }
+    previousOwners
+    prices {
+        vatInclusive
+        price
+        otr
+    }
+    mpg {
+        extra
+        urban
+        combined
+    }
+    tags
+    dimensions {
+        height
+        width
+        length
+        wheelBase
+        axelCount
+        grossVehicleWeight
+        grossCombinedWeight
+        kerbWeight
+        unladenWeight
+    }
+    images
+    spec
+    states
+    meta
+    created_at
+    updated_at
+`;

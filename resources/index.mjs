@@ -1,3 +1,3 @@
-import inventory from './inventory.mjs';
+import vehicleSearch from './vehicle-search/index.mjs';
 
-export default { inventory }
+export default { vehicleSearch }
