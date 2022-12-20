@@ -50,7 +50,7 @@ class OCS {
     async request ( query, requestData, requestHeaders, requestOptions ) {
         this.prepareRequest( requestHeaders, requestOptions );
 
-        try {
+        // try {
             const { data } = await this.apollo.query(
                 {
                     query,
@@ -59,9 +59,9 @@ class OCS {
             );
 
             return data;
-        } catch ( _ ) {
-            return {};
-        }
+        // } catch ( _ ) {
+            // return {};
+        // }
     }
 
     useBearerAuth () {
