@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 import { SCHEMA as PAGINATION_SCHEMA } from '../../../helpers/pagination.mjs';
-import { SCHEMA as VEHICLE_SCHEMA } from './schema.mjs';
+import { SCHEMA as VEHICLE_SCHEMA } from '../vehicles/schema.mjs';
 
 export default class VehicleSearch {
     constructor( ocs ) {
@@ -14,10 +14,10 @@ export default class VehicleSearch {
      * @param object options (allows you to overwrite apikey / accountId on a per request basis)
      * @returns object
      */
-    async search ( variables, query, options ) {
+    async search ( { filters, params }, query, options ) {
         const input = query || VEHICLE_SCHEMA;
 
-        const result = await this.ocs.request(
+        const result = await this.ocs.query(
             gql`query Search($filters: JSON, $params: RequestParams) {
                 search(filters: $filters, params: $params) {
                     ${ PAGINATION_SCHEMA }
@@ -27,8 +27,8 @@ export default class VehicleSearch {
                 }
             }`,
             {
-                filters: variables.filters || {},
-                params: variables.params || {}
+                filters: filters || {},
+                params: params || {}
             },
             {}, // requestHeaders
             options || {} // requestOptions
@@ -39,13 +39,11 @@ export default class VehicleSearch {
 
     /**
      * Get search facets
-     * @param object filters
-     * @param [string] selectionKeys
-     * @param [string] rangeKeys
+     * @param object variables
      * @param object options (allows you to overwrite apikey / accountId on a per request basis)
      * @returns object
      */
-    async facets ( filters, selectionKeys, rangeKeys, options ) {
+    async facets ( { filters, selectionKeys, rangeKeys }, options ) {
         const variables = {
             filters: filters || {}
         };
@@ -53,7 +51,7 @@ export default class VehicleSearch {
         if ( selectionKeys && Object.keys( selectionKeys ).length ) variables.selectionKeys = selectionKeys;
         if ( rangeKeys && Object.keys( rangeKeys ).length ) variables.rangeKeys = rangeKeys;
 
-        const result = await this.ocs.request(
+        const result = await this.ocs.query(
             gql`
                 query Query($filters: JSON, $selectionKeys: [String], $rangeKeys: [String]) {
                     facets(filters: $filters, selectionKeys: $selectionKeys, rangeKeys: $rangeKeys)
@@ -69,15 +67,12 @@ export default class VehicleSearch {
 
     /**
      * Get vehicle search with facets
-     * @param object filters
-     * @param object params
-     * @param [string] selectionKeys
-     * @param [string] rangeKeys
+     * @param object variables
      * @param string query
      * @param object options (allows you to overwrite apikey / accountId on a per request basis)
      * @returns object
      */
-    async searchWithFacets ( filters, params, selectionKeys, rangeKeys, query, options ) {
+    async searchWithFacets ( { filters, params, selectionKeys, rangeKeys }, query, options ) {
         const input = query || VEHICLE_SCHEMA;
 
         const variables = {
@@ -92,7 +87,7 @@ export default class VehicleSearch {
         if ( selectionKeys && Object.keys( selectionKeys ).length ) variables.selectionKeys = selectionKeys;
         if ( rangeKeys && Object.keys( rangeKeys ).length ) variables.rangeKeys = rangeKeys;
 
-        const result = await this.ocs.request(
+        const result = await this.ocs.query(
             gql`
                 query SearchWithFacets($params: RequestParams, $selectionKeys: [String], $rangeKeys: [String], $filters: JSON) {
                     searchWithFacets(params: $params, selectionKeys: $selectionKeys, rangeKeys: $rangeKeys, filters: $filters) {

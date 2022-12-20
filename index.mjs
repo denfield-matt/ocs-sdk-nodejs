@@ -26,6 +26,11 @@ class OCS {
         } );
     }
 
+    /**
+     * Persist apikey and accountId and setup the headers and client
+     * @param object headers
+     * @param object options
+     */
     prepareRequest ( headers, options ) {
         if ( !this.apiKey && !options.apiKey ) throw "An API key must be provided when initiating the SDK.";
         if ( !this.accountId && !options.apiKey ) throw "An account ID must be provided when initiating the SDK.";
@@ -47,27 +52,80 @@ class OCS {
         );
     }
 
-    async request ( query, requestData, requestHeaders, requestOptions ) {
+    /**
+     * Triogger a query GraphQL request
+     * @param object gql
+     * @param object requestData
+     * @param object requestHeaders
+     * @param object requestOptions
+     * @returns mixed
+     */
+    async query ( gql, requestData, requestHeaders, requestOptions ) {
+        return await this.request(
+            'query',
+            gql,
+            requestData,
+            requestHeaders,
+            requestOptions
+        );
+    }
+
+    /**
+     * Trigger a mutation GraphQL request
+     * @param object gql
+     * @param object requestData
+     * @param object requestHeaders
+     * @param object requestOptions
+     * @returns mixed
+     */
+    async mutate ( gql, requestData, requestHeaders, requestOptions ) {
+        return await this.request(
+            'mutate',
+            gql,
+            requestData,
+            requestHeaders,
+            requestOptions
+        );
+    }
+
+    /**
+     * Use ApolloClient to make an API call
+     * @param string type
+     * @param object gql
+     * @param object requestData
+     * @param object requestHeaders
+     * @param object requestOptions
+     * @returns mixed
+     */
+    async request ( type, gql, requestData, requestHeaders, requestOptions ) {
         this.prepareRequest( requestHeaders, requestOptions );
 
-        // try {
-            const { data } = await this.apollo.query(
+        try {
+            const { data } = await this.apollo[type](
                 {
-                    query,
+                    [type === 'query' ? 'query' : 'mutation']: gql,
                     variables: requestData || {}
                 }
             );
 
             return data;
-        // } catch ( _ ) {
-            // return {};
-        // }
+        } catch ( _ ) {
+            return {};
+        }
     }
 
+    /**
+     * Change apikey to Bearer authorization
+     */
     useBearerAuth () {
         this.authType = "Bearer";
     }
 
+    /**
+     * Logging tool
+     * @param mixed input
+     * @param integer depth
+     */
     log ( input, depth ) {
         console.dir( input, { depth: depth || 100 } );
     }
