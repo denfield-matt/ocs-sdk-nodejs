@@ -14,6 +14,7 @@ const API_HEADERS = {
 };
 
 class OCS {
+    authType = 'apikey';
     headers = {};
 
     constructor( apiKey, accountId ) {
@@ -30,7 +31,7 @@ class OCS {
         if ( !this.accountId && !options.apiKey ) throw "An account ID must be provided when initiating the SDK.";
 
         this.headers['X-OCS-ID'] = this.accountId || options.accountId;
-        this.headers['Authorization'] = `apikey ${ this.apiKey || options.apiKey }`;
+        this.headers['Authorization'] = `${this.authType} ${ this.apiKey || options.apiKey }`;
 
         this.apollo = new core.ApolloClient(
             {
@@ -61,6 +62,12 @@ class OCS {
         } catch(_) {
             return {};
         }
+    }
+
+    setAuthType( type ) {
+        if (!["apikey", "Bearer"].includes(type)) throw "Invalid auth type provided.";
+
+        this.authType = type;
     }
 
     log ( input, depth ) {
