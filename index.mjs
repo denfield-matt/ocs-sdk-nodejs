@@ -22,7 +22,7 @@ class OCS {
         this.accountId = accountId;
 
         Object.keys( resources ).forEach( key => {
-            this[key] = new resources[key](this);
+            this[key] = new resources[key]( this );
         } );
     }
 
@@ -31,7 +31,7 @@ class OCS {
         if ( !this.accountId && !options.apiKey ) throw "An account ID must be provided when initiating the SDK.";
 
         this.headers['X-OCS-ID'] = this.accountId || options.accountId;
-        this.headers['Authorization'] = `${this.authType} ${ this.apiKey || options.apiKey }`;
+        this.headers['Authorization'] = `${ this.authType } ${ this.apiKey || options.apiKey }`;
 
         this.apollo = new core.ApolloClient(
             {
@@ -42,9 +42,9 @@ class OCS {
                         headers: merge( API_HEADERS, this.headers, headers || {} )
                     }
                 ),
-                cache: new core.InMemoryCache( { addTypename: false })
+                cache: new core.InMemoryCache( { addTypename: false } )
             }
-        )
+        );
     }
 
     async request ( query, requestData, requestHeaders, requestOptions ) {
@@ -59,15 +59,13 @@ class OCS {
             );
 
             return data;
-        } catch(_) {
+        } catch ( _ ) {
             return {};
         }
     }
 
-    setAuthType( type ) {
-        if (!["apikey", "Bearer"].includes(type)) throw "Invalid auth type provided.";
-
-        this.authType = type;
+    useBearerAuth () {
+        this.authType = "Bearer";
     }
 
     log ( input, depth ) {
