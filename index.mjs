@@ -100,18 +100,14 @@ class OCS {
     async request ( type, gql, requestData, requestHeaders, requestOptions ) {
         this.prepareRequest( requestHeaders, requestOptions );
 
-        try {
-            const { data } = await this.apollo[type](
-                {
-                    [type === 'query' ? 'query' : 'mutation']: gql,
-                    variables: requestData || {}
-                }
-            );
+        const { data } = await this.apollo[type](
+            {
+                [type === 'query' ? 'query' : 'mutation']: gql,
+                variables: requestData || {}
+            }
+        );
 
-            return data;
-        } catch ( _ ) {
-            return {};
-        }
+        return data;
     }
 
     /**
