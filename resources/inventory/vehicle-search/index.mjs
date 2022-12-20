@@ -1,5 +1,5 @@
 import gql from 'graphql-tag';
-import { SCHEMA as PAGINATION_SCHEMA } from '../../helpers/pagination.mjs';
+import { SCHEMA as PAGINATION_SCHEMA } from '../../../helpers/pagination.mjs';
 import { SCHEMA as VEHICLE_SCHEMA } from './schema.mjs';
 
 export default class Inventory {
