@@ -32,8 +32,22 @@ class OCS {
      * @param object options
      */
     prepareRequest ( headers, options ) {
-        if ( !this.apiKey && !options.apiKey ) throw "An API key must be provided when initiating the SDK.";
-        if ( !this.accountId && !options.apiKey ) throw "An account ID must be provided when initiating the SDK.";
+        if ( !this.apiKey && !options.apiKey ) throw "An API key must be provided when using the SDK.";
+        if ( !this.accountId && !options.accountId ) throw "An account ID must be provided when using the SDK.";
+
+        if (
+            this.apollo &&
+            (
+                ( !options.apiKey && !options.accountId ) ||
+                (
+                    ( options.apiKey && options.apiKey === this.apiKey ) &&
+                    ( options.accountId && options.accountId === this.accountId )
+                )
+            )
+        ) return;
+
+        if ( options.apiKey && !this.apiKey ) this.apiKey = options.apiKey;
+        if ( options.accountId && !this.accountId ) this.accountId = options.accountId;
 
         this.headers['X-OCS-ID'] = this.accountId || options.accountId;
         this.headers['Authorization'] = `${ this.authType } ${ this.apiKey || options.apiKey }`;
