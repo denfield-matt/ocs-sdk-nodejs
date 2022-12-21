@@ -1,19 +1,32 @@
 {
+  "type": "module",
   "name": "ocs-sdk",
   "version": "1.0.0",
-  "description": "SDK for OCS API",
-  "type": "module",
-  "main": "index.mjs",
+  "files": [
+    "build"
+  ],
+  "main": "./build/index.mjs",
+  "types": "./build/index.d.ts",
   "scripts": {
+    "prepack": "npm run build",
+    "build": "cross-env NODE_ENV=production node build.mjs && tsc",
+    "dev": "cross-env NODE_ENV=development node build.mjs && tsc",
+    "lint": "eslint --ext .ts --ignore-path .gitignore src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "@apollo/client": "^3.7.2",
+    "@types/lodash": "^4.14.191",
+    "@types/lodash-es": "^4.17.6",
+    "@types/node": "^18.11.17",
+    "cross-env": "^7.0.3",
     "cross-fetch": "^3.1.5",
+    "esbuild": "^0.16.10",
+    "esbuild-node-externals": "^1.6.0",
+    "eslint": "^8.30.0",
     "graphql": "^16.6.0",
     "graphql-tag": "^2.12.6",
-    "lodash-es": "^4.17.21"
+    "lodash-es": "^4.17.21",
+    "typescript": "^4.9.4"
   }
 }

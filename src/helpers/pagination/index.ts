@@ -1,4 +1,4 @@
-export const SCHEMA = `
+export const PAGINATION_SCHEMA = `
     links {
         totalResults
         totalPages

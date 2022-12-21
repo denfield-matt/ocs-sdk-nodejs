@@ -1,9 +1,13 @@
 import gql from 'graphql-tag';
-import { SCHEMA as PAGINATION_SCHEMA } from '../../../helpers/pagination.mjs';
-import { SCHEMA as VEHICLE_SCHEMA } from './schema.mjs';
+import { PAGINATION_SCHEMA } from '@/helpers';
+import { SCHEMA as VEHICLE_SCHEMA } from './schema';
+import type OCS from '@/index';
+import { RequestOptions, Paginator } from '@/types';
 
 export default class Vehicles {
-    constructor( ocs ) {
+    ocs: OCS;
+
+    constructor( ocs: OCS ) {
         this.ocs = ocs;
     }
 
@@ -11,12 +15,12 @@ export default class Vehicles {
      * List all vehicles
      * @param object variables
      * @param string query
-     * @param object options (allows you to overwrite apikey / accountId on a per request basis)
+     * @param RequestOptions options (allows you to overwrite apikey / accountId on a per request basis)
      * @returns object
      */
-    async list ( { page, perPage, sort, sortBy }, query, options ) {
-        const input = query || VEHICLE_SCHEMA;
-        const variables = {};
+    async list ( { page, perPage, sort, sortBy }: Paginator, query: string, options: RequestOptions ) {
+        const input: string = query || VEHICLE_SCHEMA;
+        const variables: Paginator = {};
 
         if ( page ) variables.page = page;
         if ( perPage ) variables.perPage = perPage;
@@ -43,10 +47,10 @@ export default class Vehicles {
     /**
      * Create a vehicle
      * @param object data
-     * @param object options (allows you to overwrite apikey / accountId on a per request basis)
+     * @param RequestOptions options (allows you to overwrite apikey / accountId on a per request basis)
      * @returns object
      */
-    async create ( data, options ) {
+    async create ( data: any, options: RequestOptions ) {
         const result = await this.ocs.mutate(
             gql`mutation StoreVehicle($data: VehicleInput!) {
                 storeVehicle(data: $data) {
@@ -63,13 +67,13 @@ export default class Vehicles {
 
     /**
      * Retrieve a vehicle
-     * @param object id
+     * @param string id
      * @param string query
-     * @param object options (allows you to overwrite apikey / accountId on a per request basis)
+     * @param RequestOptions options (allows you to overwrite apikey / accountId on a per request basis)
      * @returns object
      */
-    async retrieve ( id, query, options ) {
-        const input = query || VEHICLE_SCHEMA;
+    async retrieve ( id: string, query: string, options: RequestOptions ) {
+        const input: string = query || VEHICLE_SCHEMA;
 
         const result = await this.ocs.query(
             gql`query Vehicle($value: String!, $key: String) {
@@ -90,14 +94,14 @@ export default class Vehicles {
 
     /**
      * Update a vehicle
-     * @param object id
+     * @param string id
      * @param object data
      * @param string query
-     * @param object options (allows you to overwrite apikey / accountId on a per request basis)
+     * @param RequestOptions options (allows you to overwrite apikey / accountId on a per request basis)
      * @returns object
      */
-    async update ( id, data, query, options ) {
-        const input = query || VEHICLE_SCHEMA;
+    async update ( id: string, data: any, query: string, options: RequestOptions ) {
+        const input: string = query || VEHICLE_SCHEMA;
 
         const result = await this.ocs.mutate(
             gql`mutation UpdateVehicle($value: String!, $data: VehicleInput!, $key: String) {
@@ -119,11 +123,11 @@ export default class Vehicles {
 
     /**
      * Delete a vehicle
-     * @param object id
-     * @param object options (allows you to overwrite apikey / accountId on a per request basis)
+     * @param string id
+     * @param RequestOptions options (allows you to overwrite apikey / accountId on a per request basis)
      * @returns object
      */
-    async destroy ( id, options ) {
+    async destroy ( id: string, options: RequestOptions ) {
         const result = await this.ocs.mutate(
             gql`mutation DestoryVehicle($value: String!) {
                 destoryVehicle(value: $value)

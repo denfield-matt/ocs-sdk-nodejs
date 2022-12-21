@@ -1,0 +1,4 @@
+"use strict";
+exports.__esModule = true;
+exports.SCHEMA = void 0;
+exports.SCHEMA = "\n    id\n    external_driver\n    external_id\n    class\n    make\n    model\n    range\n    derivative\n    vrm\n    vin\n    bodyType\n    fuelType\n    regDate\n    doors\n    seats\n    mileage\n    colour\n    transmission\n    engineSize\n    enginePower\n    powerTrain\n    emissions\n    acceleration {\n        mph\n        khp\n        zeroTo60Mph\n        zeroTo100Kph\n        maxSpeedMph\n        maxSpeedKph\n    }\n    previousOwners\n    prices {\n        vatInclusive\n        price\n        otr\n    }\n    mpg {\n        extra\n        urban\n        combined\n    }\n    tags\n    dimensions {\n        height\n        width\n        length\n        wheelBase\n        axelCount\n        grossVehicleWeight\n        grossCombinedWeight\n        kerbWeight\n        unladenWeight\n    }\n    images\n    spec\n    states\n    meta\n    created_at\n    updated_at\n";

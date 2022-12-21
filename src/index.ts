@@ -1,9 +1,12 @@
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+// if (process.env.NODE_ENV === 'development') {
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+// }
 
 import { merge } from 'lodash-es';
 import fetch from 'cross-fetch';
-import core from '@apollo/client/core/core.cjs';
-import resources from './resources/index.mjs';
+import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client/core/index.js';
+import resources from './resources';
+import { RequestOptions } from '@/types';
 
 const API_PROTOCOL = process.env.API_PROTOCOL || 'https';
 const API_HOST = process.env.API_HOST || 'api.ocsoftware.test';
@@ -13,15 +16,21 @@ const API_HEADERS = {
     'Accept': 'application/json'
 };
 
-class OCS {
-    authType = 'apikey';
-    headers = {};
 
-    constructor( apiKey, accountId ) {
+
+class OCS {
+    apiKey: string;
+    accountId: string;
+    authType: string = 'apikey';
+    headers: any = {};
+    apollo: any;
+
+    constructor( apiKey: string, accountId: string ) {
         this.apiKey = apiKey;
         this.accountId = accountId;
 
-        Object.keys( resources ).forEach( key => {
+        Object.keys( resources ).forEach( (key: string) => {
+            // @ts-ignore
             this[key] = new resources[key]( this );
         } );
     }
@@ -31,7 +40,7 @@ class OCS {
      * @param object headers
      * @param object options
      */
-    prepareRequest ( headers, options ) {
+    prepareRequest ( headers: any, options: any ) {
         if ( !this.apiKey && !options.apiKey ) throw "An API key must be provided when using the SDK.";
         if ( !this.accountId && !options.accountId ) throw "An account ID must be provided when using the SDK.";
 
@@ -52,16 +61,16 @@ class OCS {
         this.headers['X-OCS-ID'] = this.accountId || options.accountId;
         this.headers['Authorization'] = `${ this.authType } ${ this.apiKey || options.apiKey }`;
 
-        this.apollo = new core.ApolloClient(
+        this.apollo = new ApolloClient(
             {
-                link: core.createHttpLink(
+                link: createHttpLink(
                     {
                         uri: `${ API_PROTOCOL }://${ API_HOST }${ API_ENDPOINT }`,
                         fetch,
                         headers: merge( API_HEADERS, this.headers, headers || {} )
                     }
                 ),
-                cache: new core.InMemoryCache( { addTypename: false } )
+                cache: new InMemoryCache( { addTypename: false } )
             }
         );
     }
@@ -74,7 +83,7 @@ class OCS {
      * @param object requestOptions
      * @returns mixed
      */
-    async query ( gql, requestData, requestHeaders, requestOptions ) {
+    async query ( gql: any, requestData: any, requestHeaders: any, requestOptions: RequestOptions ) {
         return await this.request(
             'query',
             gql,
@@ -92,7 +101,7 @@ class OCS {
      * @param object requestOptions
      * @returns mixed
      */
-    async mutate ( gql, requestData, requestHeaders, requestOptions ) {
+    async mutate ( gql: any, requestData: any, requestHeaders: any, requestOptions: RequestOptions ) {
         return await this.request(
             'mutate',
             gql,
@@ -111,7 +120,7 @@ class OCS {
      * @param object requestOptions
      * @returns mixed
      */
-    async request ( type, gql, requestData, requestHeaders, requestOptions ) {
+    async request ( type: string, gql: any, requestData: any, requestHeaders: any, requestOptions: RequestOptions ) {
         this.prepareRequest( requestHeaders, requestOptions );
 
         const { data } = await this.apollo[type](
@@ -136,7 +145,7 @@ class OCS {
      * @param mixed input
      * @param integer depth
      */
-    log ( input, depth ) {
+    log ( input: any, depth: number ) {
         console.dir( input, { depth: depth || 100 } );
     }
 }

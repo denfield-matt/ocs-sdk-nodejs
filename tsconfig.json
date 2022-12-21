@@ -1,0 +1,31 @@
+{
+    "compilerOptions": {
+        "emitDeclarationOnly": true,
+        "declaration": true,
+        "baseUrl": ".",
+        "outDir": "./build/",
+        "outFile": "build/index.d.ts",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "target": "es2020",
+        "lib": ["esnext"],
+        "paths": {
+            "*": [ "./src/types/*.d.ts" ],
+            "@/*": [ "./src/*" ]
+        },
+        "strict": true,
+        "jsx": "preserve",
+        "importHelpers": true,
+        "experimentalDecorators": true,
+        "skipLibCheck": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "sourceMap": true,
+        "resolveJsonModule": true,
+        // "isolatedModules": true,
+        "disableSizeLimit": true
+    },
+    "include": [
+        "./src/**/*"
+    ]
+}

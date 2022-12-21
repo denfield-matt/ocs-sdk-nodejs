@@ -1,20 +1,31 @@
 import gql from 'graphql-tag';
-import { SCHEMA as PAGINATION_SCHEMA } from '../../../helpers/pagination.mjs';
-import { SCHEMA as VEHICLE_SCHEMA } from '../vehicles/schema.mjs';
+import { PAGINATION_SCHEMA } from '@/helpers';
+import { SCHEMA as VEHICLE_SCHEMA } from '@/resources/inventory/vehicles/schema';
+import type OCS from '@/index';
+import { RequestOptions, Paginator } from '@/types';
+
+type VehicleSearchVariables = {
+    filters?: any
+    params?: Paginator
+    selectionKeys?: [string]
+    rangeKeys?: [string]
+}
 
 export default class VehicleSearch {
-    constructor( ocs ) {
+    ocs: OCS;
+
+    constructor( ocs: OCS ) {
         this.ocs = ocs;
     }
 
     /**
      * Perform a vehicle search
-     * @param object variables
+     * @param VehicleSearchVariables variables
      * @param string query
-     * @param object options (allows you to overwrite apikey / accountId on a per request basis)
+     * @param RequestOptions options (allows you to overwrite apikey / accountId on a per request basis)
      * @returns object
      */
-    async search ( { filters, params }, query, options ) {
+    async search ( { filters, params }: VehicleSearchVariables, query: string, options: RequestOptions ) {
         const input = query || VEHICLE_SCHEMA;
 
         const result = await this.ocs.query(
@@ -39,12 +50,12 @@ export default class VehicleSearch {
 
     /**
      * Get search facets
-     * @param object variables
-     * @param object options (allows you to overwrite apikey / accountId on a per request basis)
+     * @param VehicleSearchVariables variables
+     * @param RequestOptions options (allows you to overwrite apikey / accountId on a per request basis)
      * @returns object
      */
-    async facets ( { filters, selectionKeys, rangeKeys }, options ) {
-        const variables = {
+    async facets ( { filters, selectionKeys, rangeKeys }: VehicleSearchVariables, options: RequestOptions ) {
+        const variables: VehicleSearchVariables = {
             filters: filters || {}
         };
 
@@ -69,13 +80,13 @@ export default class VehicleSearch {
      * Get vehicle search with facets
      * @param object variables
      * @param string query
-     * @param object options (allows you to overwrite apikey / accountId on a per request basis)
+     * @param RequestOptions options (allows you to overwrite apikey / accountId on a per request basis)
      * @returns object
      */
-    async searchWithFacets ( { filters, params, selectionKeys, rangeKeys }, query, options ) {
+    async searchWithFacets ( { filters, params, selectionKeys, rangeKeys }: VehicleSearchVariables, query: string, options: RequestOptions ) {
         const input = query || VEHICLE_SCHEMA;
 
-        const variables = {
+        const variables: VehicleSearchVariables = {
             filters: filters || {},
             params: {
                 page: 1,
